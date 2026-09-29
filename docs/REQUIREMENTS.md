@@ -149,16 +149,44 @@ Email **hello@getkwill.com**, subject `Frontend Trial — [Your Name]`, containi
 
 ## Acceptance Criteria
 
-- [ ] All F1–F14 visible and correct in each of the three states.
-- [ ] `?state=` with an invalid value renders the default state.
-- [ ] Nav jumps to each section and highlights the section in view on scroll, on mobile and desktop.
-- [ ] Prices render as € with two decimals.
-- [ ] Today's row in hours is emphasised; Monday reads clearly as closed.
-- [ ] Tab order is logical; every interactive element shows a visible focus ring.
-- [ ] Text contrast ≥ 4.5:1 (normal) / 3:1 (large), including dimmed sold-out text.
-- [ ] No horizontal page scroll at 360px width; tap targets ≥ 44px tall in the nav.
-- [ ] `lint`, `typecheck`, `test`, `build` all pass.
-- [ ] README covers run instructions, tech, what's next.
+Status as of the final verification pass (see *Traceability* for evidence).
+
+- [x] All F1–F14 visible and correct in each of the three states.
+- [x] `?state=` with an invalid value renders the default state.
+- [x] Nav jumps to each section and highlights the section in view on scroll, on mobile and desktop.
+- [x] Prices render as € with two decimals.
+- [x] Today's row in hours is emphasised; Monday reads clearly as closed.
+- [x] Tab order is logical; every interactive element shows a visible focus ring.
+- [x] Text contrast ≥ 4.5:1 (normal) / 3:1 (large), including dimmed sold-out text.
+- [x] No horizontal page scroll at 320, 360, 375, 768 or 1280px; every visible link ≥ 44px tall.
+- [x] `lint`, `typecheck`, `test`, `build` all pass.
+- [x] README covers run instructions, tech, what's next.
+- [ ] Tested on a real phone — **not done** (Chrome mobile emulation only).
+- [ ] GitHub repo, Vercel deployment, Loom, email — **candidate's actions**, not code.
+
+## Traceability
+
+| Req | Implementation | Verification |
+| --- | --- | --- |
+| F1 Hero + open status | `components/Hero.tsx`, `hours.ts#getOpenStatus` | `hours.test.ts`, `scenario.test.ts`; screenshots ×3 states |
+| F2 Today's special | `components/SpecialCallout.tsx`, `special.ts` | `menu-data.test.ts` (resolveSpecial); screenshots |
+| F3/F4 Sticky nav + scroll-spy | `components/CategoryNav.tsx` | Playwright: click each tab → heading below bar, active tab correct; scroll sweep Brunch → Sandwiches → Drinks → Sides at 375 & 1280 |
+| F5 Sections | `components/MenuSection.tsx` | Screenshots; empty Sides description omitted (`menu-data.test.ts`) |
+| F6/F7 Items, €, tags | `components/MenuItemRow.tsx`, `DietaryTags.tsx`, `format.ts#formatPrice` | `format.test.ts`; screenshots |
+| F8/F9 Hours, today, closed | `components/HoursBlock.tsx` | Screenshots (open: Tuesday; closed: Monday); `aria-current="date"` checked |
+| F10 Footer | `components/SiteFooter.tsx`, `format.ts#toTelHref/toInstagramUrl/toMapsUrl` | `format.test.ts`; screenshots |
+| F11 `?state=` | `scenario.ts#parseDemoState`, `app/page.tsx` | `scenario.test.ts` (9 inputs); Playwright over 7 URLs |
+| F12 open | `scenario.ts#getScenario` | `scenario.test.ts`; Playwright |
+| F13 closed + next opening | `components/ClosedBanner.tsx`, `format.ts#describeNextOpening` | `hours.test.ts`, `format.test.ts`; Playwright |
+| F14 sold out | `MenuItemRow.tsx`, `SpecialCallout.tsx#SoldOutSpecial` | `scenario.test.ts`; Playwright asserts "Sold out" in the row |
+| N1 Stack | `package.json` (next 15.5.26, react 19.1, tailwind 4, strict TS) | `npm run build` |
+| N3 No `any` | — | grep: none in `src/`; one documented cast in `hours.ts` |
+| U1 Brand colour | `globals.css` `--color-amber`; special fill, buttons, active nav, accent rules, today's row, top bar | Visual review |
+| R1/R2 Responsive | Mobile-first classes; `lg` sidebar layout | Screenshots 375/768/1280, `scrollWidth − innerWidth = 0` for all 9 combos |
+| A1–A6 Accessibility | Landmarks, headings, skip link, focus rings, contrast tokens | axe-core: 0 violations ×6 (3 states × 2 widths); keyboard tab-through; measured contrast ratios |
+| S1 Entrance animation | `globals.css` `@utility enter` | Disabled under reduced motion and in print |
+| S2 Print | `@media print` + `print:` utilities | Chrome PDF: 1 A4 page in all three states |
+| S3–S5 | Not implemented | Documented in README / DECISIONS D12 |
 
 ## Ambiguities / Assumptions
 

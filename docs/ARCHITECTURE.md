@@ -52,13 +52,15 @@ src/
 │   ├── globals.css      Tailwind v4 @theme tokens, base, print, motion
 │   └── icon.svg
 ├── components/ui/
-│   └── Pill.tsx         the one shared primitive (tags, sold-out, today)
+│   ├── Pill.tsx         the one shared primitive (tags, sold-out, today)
+│   └── icons.tsx        decorative SVGs (cardamom mark, arrows, moon, sparkle)
 ├── data/
 │   └── menu.json
 └── features/menu/
     ├── types.ts
     ├── menu-data.ts
     ├── scenario.ts  hours.ts  special.ts  format.ts   (+ *.test.ts)
+    ├── anchors.ts       in-page anchor ids shared by links and targets
     └── components/
         Hero, ClosedBanner, SpecialCallout, CategoryNav, MenuSection,
         MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher
