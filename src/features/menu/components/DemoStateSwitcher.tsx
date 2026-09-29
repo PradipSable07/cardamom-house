@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { formatTime, formatWeekday } from "../format";
 import { DEMO_STATE_LABELS, DEMO_STATES, type DemoState } from "../scenario";
 import type { LocalTime } from "../types";
@@ -25,8 +24,10 @@ export function DemoStateSwitcher({ current, simulatedNow }: DemoStateSwitcherPr
             const isCurrent = state === current;
             return (
               <li key={state}>
-                <Link
-                  href={{ query: { state } }}
+                {/* A plain link: every state is a static page, so a full load is
+                    instant and needs no client router code or prefetching. */}
+                <a
+                  href={`/?state=${state}`}
                   aria-current={isCurrent ? "page" : undefined}
                   className={`inline-flex min-h-11 items-center rounded-full px-4 font-semibold transition-colors outline-amber-glow ${
                     isCurrent
@@ -35,7 +36,7 @@ export function DemoStateSwitcher({ current, simulatedNow }: DemoStateSwitcherPr
                   }`}
                 >
                   {DEMO_STATE_LABELS[state]}
-                </Link>
+                </a>
               </li>
             );
           })}

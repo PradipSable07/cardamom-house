@@ -1,22 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { getOpenStatus } from "./hours";
 import { menu } from "./menu-data";
-import { getScenario, parseDemoState } from "./scenario";
+import nextConfig from "../../../next.config";
+import { DEFAULT_DEMO_STATE, DEMO_STATES, getScenario, isDemoState } from "./scenario";
 import { resolveSpecial } from "./special";
 
-describe("parseDemoState", () => {
-  it.each([
-    ["open", "open"],
-    ["closed", "closed"],
-    ["special-sold-out", "special-sold-out"],
-    [undefined, "open"],
-    ["", "open"],
-    ["CLOSED", "open"],
-    ["nonsense", "open"],
-    [["closed", "open"], "closed"],
-    [[], "open"],
-  ] as const)("%j → %s", (input, expected) => {
-    expect(parseDemoState(input as string | string[] | undefined)).toBe(expected);
+describe("isDemoState", () => {
+  it.each(["open", "closed", "special-sold-out"])("accepts %s", (value) => {
+    expect(isDemoState(value)).toBe(true);
+  });
+
+  it.each(["", "CLOSED", "nonsense", "state"])("rejects %j", (value) => {
+    expect(isDemoState(value)).toBe(false);
+  });
+});
+
+describe("?state= routing", () => {
+  it("rewrites every non-default state to its prerendered page", async () => {
+    const rewrites = await nextConfig.rewrites?.();
+    const beforeFiles = (rewrites && !Array.isArray(rewrites) && rewrites.beforeFiles) || [];
+    const routed = beforeFiles.map((r) => [r.has?.[0]?.value, r.destination]);
+    expect(routed).toEqual(
+      DEMO_STATES.filter((s) => s !== DEFAULT_DEMO_STATE).map((s) => [s, `/state/${s}`]),
+    );
   });
 });
 
