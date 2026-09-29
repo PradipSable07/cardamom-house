@@ -8,7 +8,7 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 
 ## Status
 
-**All MUST requirements implemented and verified. Stretch goals S1 (entrance animation) and S2 (one-page print) done; S3–S5 intentionally skipped.** Not yet pushed or deployed.
+**All MUST requirements implemented and verified. Stretch goals S1 (entrance animation) and S2 (one-page print) done; S3–S5 intentionally skipped.** Live at https://cardamom-house-ashen.vercel.app (GitHub: https://github.com/PradipSable07/cardamom-house, auto-deploys from `main`).
 
 ## Architecture (one paragraph)
 
@@ -63,12 +63,13 @@ QA scripts (Playwright + axe) were run from the session scratchpad, not committe
 ## Remaining work (candidate)
 
 1. Test on a real phone (tap targets, sticky bar, iOS Safari scroll behaviour).
-2. Create the GitHub repo and push (`git remote add origin … && git push -u origin main`).
-3. Import into Vercel (framework preset: Next.js; no env vars needed).
-4. Record the 3–5 min Loom. Suggested talking points:
+2. Run https://pagespeed.web.dev on the production URL for the authoritative mobile score. Local Lighthouse against production gave 87 on a CPU-loaded machine: LCP 2.5 s, CLS 0.
+3. ~~Create the GitHub repo and push~~: done, public.
+4. ~~Deploy to Vercel~~: done, Git-connected.
+5. Record the 3–5 min Loom. Suggested talking points:
    - *Proud of:* open/closed logic is a pure, tested function of (hours, time) — the closed banner's "back tomorrow, Tuesday, from 08:00" is computed, so any day works, not just Monday.
    - *Would revisit:* no real-clock mode; would add `?state=live` and the dietary filter.
    - *Question for Kwill:* should today's special stay visible on a closed day? (Assumed no — D3.)
-5. Email hello@getkwill.com, subject `Frontend Trial — [Your Name]`.
+6. Email hello@getkwill.com, subject `Frontend Trial — [Your Name]`.
 
 Optional next engineering steps: commit the Playwright/axe checks as an e2e suite in CI; dietary filter; dark mode.

@@ -1,5 +1,7 @@
 # Cardamom House — menu page
 
+**Live:** https://cardamom-house-ashen.vercel.app · [closed](https://cardamom-house-ashen.vercel.app/?state=closed) · [special sold out](https://cardamom-house-ashen.vercel.app/?state=special-sold-out)
+
 A single-page, phone-first menu for Cardamom House, a (fictional) brunch café in Lisbon. It is typography-led: warm cream paper, espresso ink, and the café's amber `#B45309` on the things that matter — today's special, buttons, the active section and today's hours.
 
 ## Run it locally
@@ -123,7 +125,9 @@ It's a standard Next.js app with no environment variables, so it deploys on Verc
 2. In Vercel, choose **Add New → Project** and import the repo. The framework preset (Next.js), build command (`next build`) and Node version (22.x, from `engines`) are all picked up automatically.
 3. Deploy. Every route is prerendered, so all three `?state=` URLs are served from the CDN.
 
-Alternatively, from the CLI: `vercel` for a preview, `vercel --prod` for production.
+Alternatively, from the CLI: `vercel` for a preview, `vercel --prod` for production. `.vercelignore` keeps local-only files (env files, notes, traces) out of CLI uploads.
+
+This repo is connected: every push to `main` deploys to production at https://cardamom-house-ashen.vercel.app, and pull requests get preview URLs.
 
 GitHub Actions ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs lint, typecheck, tests and build on every push and pull request. Responses also carry basic security headers (`nosniff`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`) and no `X-Powered-By`.
 
