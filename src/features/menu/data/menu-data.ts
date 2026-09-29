@@ -1,6 +1,6 @@
-import rawMenuJson from "@/data/menu.json";
-import { parseDayHours } from "./hours";
-import type { DietaryTag, Menu, RawMenu, WeeklyHours } from "./types";
+import type { DietaryTag, Menu, RawMenu, WeeklyHours } from "@/features/menu/types/menu";
+import { parseDayHours } from "@/features/menu/utils/hours";
+import rawMenuJson from "./menu.json";
 
 const TAG_CODES: Record<string, DietaryTag> = {
   v: "vegetarian",

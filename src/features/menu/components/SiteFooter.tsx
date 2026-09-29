@@ -1,7 +1,7 @@
 import { CardamomMark } from "@/components/ui/icons";
-import { toInstagramUrl, toMapsUrl, toTelHref } from "../format";
-import type { DemoState } from "../scenario";
-import type { LocalTime, Restaurant } from "../types";
+import type { LocalTime, Restaurant } from "@/features/menu/types/menu";
+import type { DemoState } from "@/features/menu/types/scenario";
+import { toInstagramUrl, toMapsUrl, toTelHref } from "@/features/menu/utils/format";
 import { DemoStateSwitcher } from "./DemoStateSwitcher";
 
 interface SiteFooterProps {

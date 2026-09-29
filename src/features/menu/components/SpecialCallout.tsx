@@ -1,8 +1,8 @@
 import { Pill } from "@/components/ui/Pill";
 import { ArrowRight, CardamomMark, Sparkle } from "@/components/ui/icons";
-import { formatPrice } from "../format";
-import type { TodaysSpecial } from "../special";
-import { menuItemAnchor } from "../anchors";
+import { menuItemAnchor } from "@/features/menu/constants/anchors";
+import type { TodaysSpecial } from "@/features/menu/types/status";
+import { formatPrice } from "@/features/menu/utils/format";
 import { DietaryTags } from "./DietaryTags";
 
 export function SpecialCallout({ special }: { special: TodaysSpecial }) {

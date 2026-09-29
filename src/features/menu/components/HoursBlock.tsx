@@ -1,8 +1,9 @@
 import { Pill } from "@/components/ui/Pill";
-import { HOURS_ANCHOR } from "../anchors";
-import { describeNextOpening, formatTime, formatWeekday } from "../format";
-import type { OpenStatus } from "../hours";
-import { WEEKDAYS, type Weekday, type WeeklyHours } from "../types";
+import { HOURS_ANCHOR } from "@/features/menu/constants/anchors";
+import { WEEKDAYS } from "@/features/menu/constants/weekdays";
+import type { Weekday, WeeklyHours } from "@/features/menu/types/menu";
+import type { OpenStatus } from "@/features/menu/types/status";
+import { describeNextOpening, formatTime, formatWeekday } from "@/features/menu/utils/format";
 
 interface HoursBlockProps {
   hours: WeeklyHours;

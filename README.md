@@ -39,9 +39,11 @@ Next.js 15 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 ·
 next.config.ts               ?state=closed|special-sold-out → rewrite to /state/[state]
 app/page.tsx                 static default state (open)
 app/state/[state]/page.tsx   the other states, prerendered at build time
-features/menu/*.ts           pure logic: hours, open status, special, formatting (unit tested)
 features/menu/components     MenuPage + presentational components; CategoryNav is the only client component
-data/menu.json               the brief's mock data, verbatim
+features/menu/constants      anchor ids, demo states, weekdays
+features/menu/data           menu.json (the brief's data, verbatim) + typed normaliser
+features/menu/types          raw/domain types, open status, scenario
+features/menu/utils          pure logic: hours, open status, special, formatting (unit tested)
 ```
 
 - **State lives in the URL, and every state is static.** `?state=` is resolved by a rewrite at the routing layer, so each state is a prerendered, CDN-cached page, and no server code runs on a request. Each page derives everything else from its scenario (a simulated Lisbon time plus the sold-out items): open/closed, the next opening time, today's hours row and whether the special is available. The only client state is the active nav tab.
@@ -112,6 +114,18 @@ The UI was checked in Chrome at 375, 768 and 1280 px: screenshots of every state
 - Only tested in desktop Chrome and Chrome's mobile emulation, not on a physical phone or in Safari.
 - During a smooth-scroll jump, the nav briefly highlights each section it passes.
 - Print text is small (body about 6.7pt) so that the whole menu fits on one A4 page.
+
+## Deploy
+
+It's a standard Next.js app with no environment variables, so it deploys on Vercel as is:
+
+1. Push to GitHub.
+2. In Vercel, choose **Add New → Project** and import the repo. The framework preset (Next.js), build command (`next build`) and Node version (22.x, from `engines`) are all picked up automatically.
+3. Deploy. Every route is prerendered, so all three `?state=` URLs are served from the CDN.
+
+Alternatively, from the CLI: `vercel` for a preview, `vercel --prod` for production.
+
+GitHub Actions ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs lint, typecheck, tests and build on every push and pull request. Responses also carry basic security headers (`nosniff`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`) and no `X-Powered-By`.
 
 ## What I'd build next
 

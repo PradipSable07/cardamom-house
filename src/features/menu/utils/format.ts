@@ -1,5 +1,5 @@
-import type { NextOpening } from "./hours";
-import type { Weekday } from "./types";
+import type { Weekday } from "@/features/menu/types/menu";
+import type { NextOpening } from "@/features/menu/types/status";
 
 // English copy, so English number conventions: €11.50 rather than pt-PT's 11,50 €.
 const eur = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" });

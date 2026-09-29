@@ -1,8 +1,9 @@
-import { MENU_ANCHOR } from "../anchors";
-import { getOpenStatus } from "../hours";
-import { menu } from "../menu-data";
-import { getScenario, type DemoState } from "../scenario";
-import { resolveSpecial } from "../special";
+import { MENU_ANCHOR } from "@/features/menu/constants/anchors";
+import { menu } from "@/features/menu/data/menu-data";
+import type { DemoState } from "@/features/menu/types/scenario";
+import { getOpenStatus } from "@/features/menu/utils/hours";
+import { getScenario } from "@/features/menu/utils/scenario";
+import { resolveSpecial } from "@/features/menu/utils/special";
 import { CategoryNav } from "./CategoryNav";
 import { ClosedBanner } from "./ClosedBanner";
 import { DietaryLegend } from "./DietaryTags";

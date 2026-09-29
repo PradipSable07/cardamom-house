@@ -1,5 +1,5 @@
 import { Pill, type PillTone } from "@/components/ui/Pill";
-import type { DietaryTag } from "../types";
+import type { DietaryTag } from "@/features/menu/types/menu";
 
 const DIETARY: Record<DietaryTag, { code: string; label: string; tone: PillTone }> = {
   vegetarian: { code: "V", label: "Vegetarian", tone: "sage" },

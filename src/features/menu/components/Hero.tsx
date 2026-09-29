@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { ArrowDown, CardamomMark } from "@/components/ui/icons";
-import { HOURS_ANCHOR } from "../anchors";
-import { formatTime } from "../format";
-import type { OpenStatus } from "../hours";
+import { HOURS_ANCHOR } from "@/features/menu/constants/anchors";
+import type { OpenStatus } from "@/features/menu/types/status";
+import { formatTime } from "@/features/menu/utils/format";
 
 interface HeroProps {
   name: string;

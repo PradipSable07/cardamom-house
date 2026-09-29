@@ -1,4 +1,4 @@
-import type { MenuCategory } from "../types";
+import type { MenuCategory } from "@/features/menu/types/menu";
 import { MenuItemRow } from "./MenuItemRow";
 
 interface MenuSectionProps {

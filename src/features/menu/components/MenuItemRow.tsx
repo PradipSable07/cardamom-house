@@ -1,8 +1,8 @@
 import { Pill } from "@/components/ui/Pill";
 import { Sparkle } from "@/components/ui/icons";
-import { menuItemAnchor } from "../anchors";
-import { formatPrice } from "../format";
-import type { MenuItem } from "../types";
+import { menuItemAnchor } from "@/features/menu/constants/anchors";
+import type { MenuItem } from "@/features/menu/types/menu";
+import { formatPrice } from "@/features/menu/utils/format";
 import { DietaryTags } from "./DietaryTags";
 
 interface MenuItemRowProps {

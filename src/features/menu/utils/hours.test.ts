@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getOpenStatus, parseDayHours } from "./hours";
-import type { LocalTime, WeeklyHours } from "./types";
+import type { LocalTime, WeeklyHours } from "@/features/menu/types/menu";
 
 const at = (day: LocalTime["day"], hhmm: string): LocalTime => {
   const [h, m] = hhmm.split(":").map(Number);

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MenuPage } from "@/features/menu/components/MenuPage";
-import { DEFAULT_DEMO_STATE, DEMO_STATES, isDemoState } from "@/features/menu/scenario";
+import { DEFAULT_DEMO_STATE, DEMO_STATES } from "@/features/menu/constants/demo-states";
+import { isDemoState } from "@/features/menu/utils/scenario";
 
 // Reached through the ?state= rewrites in next.config.ts. Every state is
 // prerendered at build time; anything else is a 404 rather than a server render.

@@ -12,7 +12,7 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 
 ## Architecture (one paragraph)
 
-`?state=` is resolved by rewrites in `next.config.ts` to prerendered routes (`/`, `/state/[state]`). `MenuPage` turns a `DemoState` into a `Scenario` (simulated Lisbon time plus sold-out ids), derives open status and today's special, and composes presentational components. Pure logic lives in `features/menu/*.ts` and is unit tested. `CategoryNav` is the only client component (scroll-spy). See [ARCHITECTURE.md](ARCHITECTURE.md) and [DECISIONS.md](DECISIONS.md).
+`?state=` is resolved by rewrites in `next.config.ts` to prerendered routes (`/`, `/state/[state]`). `MenuPage` turns a `DemoState` into a `Scenario` (simulated Lisbon time plus sold-out ids), derives open status and today's special, and composes presentational components. Pure logic lives in `features/menu/utils/` and is unit tested. `CategoryNav` is the only client component (scroll-spy). See [ARCHITECTURE.md](ARCHITECTURE.md) and [DECISIONS.md](DECISIONS.md).
 
 ## Files
 
@@ -20,9 +20,12 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 | --- | --- |
 | `next.config.ts` | `?state=` → `/state/[state]` rewrites |
 | `src/app/{layout,page}.tsx`, `state/[state]/page.tsx`, `globals.css`, `icon.svg` | Static routes, fonts, tokens, motion, print, favicon |
-| `src/data/menu.json` | Brief's mock data, verbatim |
-| `src/features/menu/{types,menu-data,hours,scenario,special,format,anchors}.ts` | Domain |
-| `src/features/menu/*.test.ts` | 46 unit tests |
+| `src/features/menu/data/{menu.json,menu-data.ts}` | Brief's mock data, verbatim, and its typed normaliser |
+| `src/features/menu/constants/{anchors,demo-states,weekdays}.ts` | Shared constants |
+| `src/features/menu/types/{menu,status,scenario}.ts` | Types |
+| `src/features/menu/utils/{format,hours,scenario,special}.ts` | Pure domain logic |
+| `src/features/menu/**/*.test.ts` | 46 unit tests, next to their code |
+| `.github/workflows/ci.yml` | lint, typecheck, test, build on push and PR |
 | `src/features/menu/components/*.tsx` | MenuPage, Hero, SpecialCallout, ClosedBanner, CategoryNav, MenuSection, MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher |
 | `src/components/ui/{Pill,icons}.tsx` | Shared primitive + decorative SVGs |
 

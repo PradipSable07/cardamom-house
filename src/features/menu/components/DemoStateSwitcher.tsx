@@ -1,6 +1,7 @@
-import { formatTime, formatWeekday } from "../format";
-import { DEMO_STATE_LABELS, DEMO_STATES, type DemoState } from "../scenario";
-import type { LocalTime } from "../types";
+import { DEMO_STATE_LABELS, DEMO_STATES } from "@/features/menu/constants/demo-states";
+import type { LocalTime } from "@/features/menu/types/menu";
+import type { DemoState } from "@/features/menu/types/scenario";
+import { formatTime, formatWeekday } from "@/features/menu/utils/format";
 
 interface DemoStateSwitcherProps {
   current: DemoState;

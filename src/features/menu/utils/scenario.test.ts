@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
+import nextConfig from "../../../../next.config";
+import { DEFAULT_DEMO_STATE, DEMO_STATES } from "@/features/menu/constants/demo-states";
+import { menu } from "@/features/menu/data/menu-data";
 import { getOpenStatus } from "./hours";
-import { menu } from "./menu-data";
-import nextConfig from "../../../next.config";
-import { DEFAULT_DEMO_STATE, DEMO_STATES, getScenario, isDemoState } from "./scenario";
+import { getScenario, isDemoState } from "./scenario";
 import { resolveSpecial } from "./special";
 
 describe("isDemoState", () => {

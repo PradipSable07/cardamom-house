@@ -1,4 +1,6 @@
-import { WEEKDAYS, type DayHours, type LocalTime, type Weekday, type WeeklyHours } from "./types";
+import { WEEKDAYS } from "@/features/menu/constants/weekdays";
+import type { DayHours, LocalTime, Weekday, WeeklyHours } from "@/features/menu/types/menu";
+import type { NextOpening, OpenStatus } from "@/features/menu/types/status";
 
 const RANGE = /^(\d{1,2}):(\d{2})\s*[–—-]\s*(\d{1,2}):(\d{2})$/;
 
@@ -23,22 +25,6 @@ export function parseDayHours(value: string): DayHours {
   if (closes <= opens) throw new Error(`Closing time must be after opening time in "${value}"`);
   return { kind: "open", opens, closes };
 }
-
-export interface NextOpening {
-  day: Weekday;
-  opensAt: number;
-  /** 0 = later today, 1 = tomorrow, … */
-  daysAway: number;
-}
-
-export type OpenStatus =
-  | { kind: "open"; closesAt: number }
-  | {
-      kind: "closed";
-      reason: "closed-today" | "before-opening" | "after-closing";
-      /** `null` only if the café is closed every day of the week. */
-      next: NextOpening | null;
-    };
 
 function dayAfter(day: Weekday, offset: number): Weekday {
   const index = WEEKDAYS.indexOf(day);

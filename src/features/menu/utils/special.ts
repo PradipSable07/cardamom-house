@@ -1,8 +1,5 @@
-import type { Menu, MenuCategory, MenuItem } from "./types";
-
-export type TodaysSpecial =
-  | { kind: "available"; item: MenuItem; category: MenuCategory; blurb: string }
-  | { kind: "sold-out"; item: MenuItem; category: MenuCategory };
+import type { Menu } from "@/features/menu/types/menu";
+import type { TodaysSpecial } from "@/features/menu/types/status";
 
 /** `null` when the special points at an item that isn't on the menu. */
 export function resolveSpecial(

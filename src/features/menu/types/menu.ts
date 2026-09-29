@@ -1,3 +1,5 @@
+import type { WEEKDAYS } from "@/features/menu/constants/weekdays";
+
 /** Shape of `data/menu.json` exactly as the brief supplies it. */
 export interface RawMenu {
   restaurant: {
@@ -27,17 +29,6 @@ interface RawItem {
   price: number;
   tags: string[];
 }
-
-/** Monday-first: the order the week is displayed in. */
-export const WEEKDAYS = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
-] as const;
 
 export type Weekday = (typeof WEEKDAYS)[number];
 

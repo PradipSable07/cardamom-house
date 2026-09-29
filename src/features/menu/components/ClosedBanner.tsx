@@ -1,7 +1,7 @@
 import { Moon } from "@/components/ui/icons";
-import { HOURS_ANCHOR } from "../anchors";
-import { describeNextOpening } from "../format";
-import type { OpenStatus } from "../hours";
+import { HOURS_ANCHOR } from "@/features/menu/constants/anchors";
+import type { OpenStatus } from "@/features/menu/types/status";
+import { describeNextOpening } from "@/features/menu/utils/format";
 
 type ClosedStatus = Extract<OpenStatus, { kind: "closed" }>;
 

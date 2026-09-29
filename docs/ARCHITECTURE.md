@@ -35,15 +35,15 @@ features/menu/components/MenuPage.tsx       (composes the page for one DemoState
 features/menu/components/*   (presentational, typed props, server-rendered)
     │   └── CategoryNav      (the only Client Component: scroll-spy)
     ↓
-features/menu/*.ts           (pure domain logic — unit tested)
-    scenario.ts   ?state= → simulated Lisbon time + sold-out ids
+features/menu/utils/*        (pure domain logic — unit tested)
+    scenario.ts   DemoState → simulated Lisbon time + sold-out ids
     hours.ts      parse hours strings, open/closed status, next opening
     special.ts    resolve today's special by id + availability
-    format.ts     € prices, times
+    format.ts     € prices, times, contact links
     ↓
-features/menu/menu-data.ts   (typed load + normalisation of the JSON)
+features/menu/data/menu-data.ts   (typed load + normalisation of the JSON)
     ↓
-data/menu.json               (mock data from the brief, verbatim)
+features/menu/data/menu.json      (mock data from the brief, verbatim)
 ```
 
 ## Folder structure
@@ -59,17 +59,22 @@ src/
 ├── components/ui/
 │   ├── Pill.tsx         the one shared primitive (tags, sold-out, today)
 │   └── icons.tsx        decorative SVGs (cardamom mark, arrows, moon, sparkle)
-├── data/
-│   └── menu.json
-└── features/menu/
-    ├── types.ts
-    ├── menu-data.ts
-    ├── scenario.ts  hours.ts  special.ts  format.ts   (+ *.test.ts)
-    ├── anchors.ts       in-page anchor ids shared by links and targets
-    └── components/
-        MenuPage, Hero, ClosedBanner, SpecialCallout, CategoryNav, MenuSection,
-        MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher
+└── features/menu/          everything specific to the menu, grouped by role
+    ├── components/          UI: MenuPage, Hero, ClosedBanner, SpecialCallout, CategoryNav,
+    │                        MenuSection, MenuItemRow, DietaryTags, HoursBlock, SiteFooter,
+    │                        DemoStateSwitcher
+    ├── constants/           anchors.ts (in-page ids), demo-states.ts, weekdays.ts
+    ├── data/                menu.json + menu-data.ts (typed load + normalisation)
+    ├── types/               menu.ts (raw + domain), status.ts (open status, special), scenario.ts
+    └── utils/               format.ts, hours.ts, scenario.ts, special.ts — pure, unit-tested
 ```
+
+Conventions:
+
+- **Tests sit next to the code they test** (`utils/hours.test.ts`), with no separate `__tests__` tree.
+- **Imports inside the feature use the `@/features/menu/…` alias**, so moving a file never means counting `../`. The exception is `constants/demo-states.ts`: `next.config.ts` imports it, and the config loader doesn't resolve tsconfig aliases, so it uses a relative, type-only import.
+- **No barrel `index.ts` files.** Direct imports keep dependencies explicit and avoid accidental import cycles.
+- **Shared, feature-agnostic UI** lives in `src/components/ui`. Anything menu-specific stays in the feature.
 
 ## State strategy
 
@@ -84,7 +89,7 @@ src/
 ## Data strategy
 
 - The JSON is typed against a `RawMenu` interface at import, so a shape change fails `tsc`.
-- `menu-data.ts` normalises once at module load: hours strings → `{ kind: "open", opens, closes }` in minutes, `"Closed"` → `{ kind: "closed" }`, tag codes → `"vegetarian" | "gluten-free" | "spicy"`, empty descriptions → `undefined`.
+- `data/menu-data.ts` normalises once at module load: hours strings → `{ kind: "open", opens, closes }` in minutes, `"Closed"` → `{ kind: "closed" }`, tag codes → `"vegetarian" | "gluten-free" | "spicy"`, empty descriptions → `undefined`.
 - Malformed hours or unknown tags throw with a descriptive message. The data is ours, so bad data is a bug; a unit test loads the real file so it fails in CI, not in production.
 
 ## Rendering strategy
