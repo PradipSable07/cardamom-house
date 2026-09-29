@@ -1,0 +1,7 @@
+# Never upload local-only files with CLI deploys (Git deploys already exclude them).
+CLAUDE.md
+*.pdf
+Trace-*
+qa-output
+.next
+node_modules
