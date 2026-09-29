@@ -4,7 +4,7 @@ export const DEMO_STATES = ["open", "closed", "special-sold-out"] as const;
 
 export type DemoState = (typeof DEMO_STATES)[number];
 
-export const DEFAULT_DEMO_STATE: DemoState = "open";
+const DEFAULT_DEMO_STATE: DemoState = "open";
 
 export const DEMO_STATE_LABELS: Record<DemoState, string> = {
   open: "Open",

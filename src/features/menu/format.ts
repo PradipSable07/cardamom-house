@@ -26,3 +26,17 @@ export function describeNextOpening(next: NextOpening): string {
   if (next.daysAway === 1) return `tomorrow, ${formatWeekday(next.day)}, from ${time}`;
   return `on ${formatWeekday(next.day)} from ${time}`;
 }
+
+/** "+351 21 123 4567" → "tel:+351211234567" */
+export function toTelHref(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}
+
+/** "@cardamomhouse" → "https://www.instagram.com/cardamomhouse/" */
+export function toInstagramUrl(handle: string): string {
+  return `https://www.instagram.com/${encodeURIComponent(handle.replace(/^@/, ""))}/`;
+}
+
+export function toMapsUrl(address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}

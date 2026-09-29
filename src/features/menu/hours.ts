@@ -42,6 +42,7 @@ export type OpenStatus =
 
 function dayAfter(day: Weekday, offset: number): Weekday {
   const index = WEEKDAYS.indexOf(day);
+  // The modulo keeps the index in range; the cast only satisfies noUncheckedIndexedAccess.
   return WEEKDAYS[(index + offset) % WEEKDAYS.length] as Weekday;
 }
 

@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Cardamom House tokens. Contrast (WCAG) measured against cream #FBF6EE:
+ * ink 15.2 · ink-soft 7.7 · ink-mute 5.1 · amber 4.7 · amber-deep 6.6.
+ * On amber: only cream/white text (4.7 / 5.0). On espresso: cream 15.2, amber-glow 8.9.
+ */
+@theme {
+  --color-cream: #fbf6ee;
+  --color-paper: #fffdf9;
+  --color-oat: #f3eadc;
+  --color-line: #e6d9c6;
+  --color-ink: #2b1d14;
+  --color-ink-soft: #5e4b3c;
+  --color-ink-mute: #7a6554;
+  --color-espresso: #2b1d14;
+  --color-cream-mute: #cdbba7;
+
+  --color-amber: #b45309;
+  --color-amber-deep: #92400e;
+  --color-amber-wash: #fbeedd;
+  --color-amber-glow: #f4b266;
+
+  --color-sage: #46663a;
+  --color-sage-wash: #e8efdf;
+  --color-wheat: #7a5418;
+  --color-wheat-wash: #f4ead4;
+  --color-paprika: #a2361a;
+  --color-paprika-wash: #f8e4db;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    /* Keeps anchored headings clear of the sticky category bar. */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (width >= 64rem) {
+    html {
+      scroll-padding-top: 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background-color: var(--color-amber-wash);
+    color: var(--color-ink);
+  }
+
+  /*
+   * The ring colour lives on the element, not on :focus-visible, so focusing
+   * only switches the outline on. (Tailwind's transition-colors animates
+   * outline-color; setting it on focus made rings fade in from currentColor.)
+   * Surfaces that need a different ring set `outline-cream` etc. on the element.
+   */
+  :where(a, button, [tabindex]) {
+    outline-color: var(--color-amber);
+  }
+
+  :focus-visible {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: 3px;
+    border-radius: 0.25rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Gentle entrance for the hero. Off entirely for reduced-motion users. */
+@utility enter {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: enter 700ms var(--ease-out-soft) both;
+    animation-delay: var(--enter-delay, 0ms);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+/*
+ * One-page A4 print. Everything is sized in rem, so shrinking the root scales
+ * the whole layout; print: utilities in the components handle the reflow.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm 12mm;
+  }
+
+  html {
+    font-size: 9.5px;
+  }
+
+  body {
+    background: #fff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .enter {
+    animation: none;
+  }
 }

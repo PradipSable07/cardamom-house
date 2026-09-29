@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeNextOpening, formatPrice, formatTime } from "./format";
+import { describeNextOpening, formatPrice, formatTime, toInstagramUrl, toMapsUrl, toTelHref } from "./format";
 
 describe("formatPrice", () => {
   it.each([
@@ -25,5 +25,21 @@ describe("describeNextOpening", () => {
     expect(describeNextOpening({ day: "saturday", opensAt: 540, daysAway: 0 })).toBe("today from 09:00");
     expect(describeNextOpening({ day: "tuesday", opensAt: 480, daysAway: 1 })).toBe("tomorrow, Tuesday, from 08:00");
     expect(describeNextOpening({ day: "tuesday", opensAt: 480, daysAway: 2 })).toBe("on Tuesday from 08:00");
+  });
+});
+
+describe("contact links", () => {
+  it("builds a dialable tel: href", () => {
+    expect(toTelHref("+351 21 123 4567")).toBe("tel:+351211234567");
+  });
+
+  it("builds an Instagram profile URL from the handle", () => {
+    expect(toInstagramUrl("@cardamomhouse")).toBe("https://www.instagram.com/cardamomhouse/");
+  });
+
+  it("encodes the address for a maps search", () => {
+    expect(toMapsUrl("Rua da Boavista 84, 1200-066 Lisboa")).toBe(
+      "https://www.google.com/maps/search/?api=1&query=Rua%20da%20Boavista%2084%2C%201200-066%20Lisboa",
+    );
   });
 });
