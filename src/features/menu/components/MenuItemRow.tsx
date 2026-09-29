@@ -20,7 +20,7 @@ export function MenuItemRow({ item, isSpecial, isSoldOut }: MenuItemRowProps) {
       id={menuItemAnchor(item.id)}
       className={
         highlighted
-          ? "relative -mx-4 my-2 rounded-2xl border-transparent bg-amber-wash px-4 py-5 before:absolute before:inset-y-5 before:left-0 before:w-1 before:rounded-r-full before:bg-amber sm:-mx-5 sm:px-5 print:my-0.5 print:py-1.5"
+          ? "arrive-glow relative -mx-4 my-2 rounded-2xl border-transparent bg-amber-wash px-4 py-5 before:absolute before:inset-y-5 before:left-0 before:w-1 before:rounded-r-full before:bg-amber sm:-mx-5 sm:px-5 print:my-0.5 print:py-1.5"
           : "py-5 print:py-1.5"
       }
     >

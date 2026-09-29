@@ -58,6 +58,9 @@
   body {
     background-color: var(--color-cream);
     color: var(--color-ink);
+    /* Mid-flight, the intro mark must never widen the page. `clip` (unlike
+     * `hidden`) creates no scroll container, so the sticky nav keeps working. */
+    overflow-x: clip;
   }
 
   ::selection {
@@ -90,10 +93,85 @@
   }
 }
 
-/* Gentle entrance for the hero. Off entirely for reduced-motion users. */
+/*
+ * Motion. Two small moments, all CSS so they run before hydration:
+ *   1. intro   — the cardamom mark flies in from the centre of the screen and
+ *                lands above the name; tagline, status and special follow.
+ *   2. arrival — the special's row glows briefly when jumped to.
+ * (Scroll-drawn accent rules were tried and removed: measurable main-thread
+ * cost on first render for a barely-noticed effect.)
+ * The <h1> is the LCP element and is never hidden or faded.
+ * Everything is off under prefers-reduced-motion and in print.
+ */
+
+/* 1a. The mark. Its resting position is known from the hero's layout
+ * (container max-w-6xl, px-5/sm:px-8, pt-10/sm:pt-16/lg:pt-24, below the
+ * 0.375rem top bar), so the start point — the viewport centre — can be
+ * computed in CSS. If the layout changes, only the start point drifts; the
+ * mark always lands exactly, because the animation ends at no transform. */
+.intro-mark {
+  --pad: 1.25rem;
+  --top: 2.5rem;
+  --from-scale: 7;
+  --mark-x: calc(max(0px, (100vw - 72rem) / 2) + var(--pad) + 1.25rem);
+  --mark-y: calc(0.375rem + var(--top) + 1.25rem);
+}
+
+@media (width >= 40rem) {
+  .intro-mark {
+    --pad: 2rem;
+    --top: 4rem;
+    --from-scale: 9;
+  }
+}
+
+@media (width >= 64rem) {
+  .intro-mark {
+    --top: 6rem;
+    --from-scale: 11;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-mark {
+    /* Separate translate / scale / rotate properties let flight and settle
+     * use different curves without fighting over `transform`. */
+    animation:
+      mark-fade 220ms ease-out both,
+      mark-fly 1150ms linear both,
+      mark-spin 1150ms linear both;
+  }
+}
+
+@keyframes mark-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Appear large in the centre, hold for a beat, then glide home. */
+@keyframes mark-fly {
+  0%,
+  20% {
+    translate: calc(50vw - var(--mark-x)) calc(50vh - var(--mark-y));
+    scale: var(--from-scale);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.2, 1);
+  }
+}
+
+/* Turns during the glide and overshoots slightly as it lands. */
+@keyframes mark-spin {
+  0%,
+  20% {
+    rotate: -70deg;
+    animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1.35);
+  }
+}
+
+/* 1b. Supporting hero content rises in while the mark decelerates. */
 @utility enter {
   @media (prefers-reduced-motion: no-preference) {
-    animation: enter 700ms var(--ease-out-soft) both;
+    animation: enter 650ms var(--ease-out-soft) both;
     animation-delay: var(--enter-delay, 0ms);
   }
 }
@@ -101,7 +179,27 @@
 @keyframes enter {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
+    translate: 0 0.75rem;
+  }
+}
+
+/* 2. Arrival glow on the jumped-to special. */
+@utility arrive-glow {
+  @media (prefers-reduced-motion: no-preference) {
+    &:target {
+      /* Delayed so it peaks after the smooth scroll has brought the row into view. */
+      animation: arrive-glow 1500ms ease-out 550ms;
+    }
+  }
+}
+
+@keyframes arrive-glow {
+  0%,
+  25% {
+    box-shadow: 0 0 0 0.375rem rgb(180 83 9 / 0.28);
+  }
+  to {
+    box-shadow: 0 0 0 0.375rem rgb(180 83 9 / 0);
   }
 }
 
@@ -125,7 +223,9 @@
     -webkit-print-color-adjust: exact;
   }
 
-  .enter {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
   }
 }
