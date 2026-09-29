@@ -48,3 +48,6 @@ next-env.d.ts
 
 # performance traces
 Trace-*.json*
+
+# local AI assistant instructions (not published)
+CLAUDE.md
