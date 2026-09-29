@@ -26,7 +26,11 @@ UI states that exist here:
 ## Layers
 
 ```text
-app/page.tsx  (Server Component — reads ?state=, composes the page)
+next.config.ts rewrites (?state= → /state/[state])
+    ↓
+app/page.tsx · app/state/[state]/page.tsx   (static, prerendered per state)
+    ↓
+features/menu/components/MenuPage.tsx       (composes the page for one DemoState)
     ↓
 features/menu/components/*   (presentational, typed props, server-rendered)
     │   └── CategoryNav      (the only Client Component: scroll-spy)
@@ -48,7 +52,8 @@ data/menu.json               (mock data from the brief, verbatim)
 src/
 ├── app/
 │   ├── layout.tsx       fonts, metadata, viewport
-│   ├── page.tsx         route: ?state= → Scenario → page composition
+│   ├── page.tsx         static default state
+│   ├── state/[state]/   prerendered non-default states (reached via rewrites)
 │   ├── globals.css      Tailwind v4 @theme tokens, base, print, motion
 │   └── icon.svg
 ├── components/ui/
@@ -62,7 +67,7 @@ src/
     ├── scenario.ts  hours.ts  special.ts  format.ts   (+ *.test.ts)
     ├── anchors.ts       in-page anchor ids shared by links and targets
     └── components/
-        Hero, ClosedBanner, SpecialCallout, CategoryNav, MenuSection,
+        MenuPage, Hero, ClosedBanner, SpecialCallout, CategoryNav, MenuSection,
         MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher
 ```
 
@@ -71,7 +76,7 @@ src/
 | Kind | Where it lives |
 | --- | --- |
 | Server state | None. Data is a static JSON import. |
-| URL state | `?state=` — the single source of truth for the demo scenario. Parsed once in `page.tsx`. |
+| URL state | `?state=`: the single source of truth for the demo scenario. Resolved by rewrites in `next.config.ts` to a prerendered route. |
 | Derived state | Open status, next opening, special availability, today's row — all computed from (data, scenario) during render. Nothing is copied into React state. |
 | Local UI state | `activeCategoryId` inside `CategoryNav`, driven by an `IntersectionObserver`. |
 | Global client state | None. |
@@ -84,12 +89,13 @@ src/
 
 ## Rendering strategy
 
-- `page.tsx` awaits `searchParams` (Next 15 async API), which makes the route dynamically rendered. That's intended: the HTML arrives already in the right state, with no flash of the wrong one and no client-side state parsing.
-- The only JavaScript that ships beyond the framework is the scroll-spy. The category links are plain `#anchors`, so jumping still works with no JS.
+- Every state is **static**. `next.config.ts` rewrites `/?state=closed` and `/?state=special-sold-out` to `/state/[state]`, which is prerendered with `generateStaticParams` (`dynamicParams = false`). `/` is the static default. No request runs server code, and TTFB is a CDN hit. (This supersedes the first version, which read `searchParams` and rendered on every request.)
+- The only JavaScript shipped beyond the framework is the scroll-spy, 1.3 kB. Category links and demo-state links are plain anchors, so everything works without JS.
+- Motion is CSS-only and never touches the LCP element (`<h1>`). See DECISIONS D15 and D17.
 
 ## Error handling
 
-- Unknown or repeated `?state=` values fall back to `open`.
+- Unknown `?state=` values match no rewrite and get `/` (open). A repeated param resolves to its last value, following Next’s matcher.
 - Special pointing at a missing item → callout not rendered; the page still works.
 - There is no fetch that can fail; Next's default error boundary covers unexpected render errors.
 

@@ -84,7 +84,7 @@ A single public-facing menu page for **Cardamom House**, a brunch café in Lisbo
 ## Validation Requirements
 
 No forms or user input exist. The only input is `?state=`:
-- Unknown / missing / repeated values → fall back to `open` (the documented default).
+- Unknown or missing values fall back to `open` (the documented default). A repeated param resolves to its last value, as the Next.js router matches it.
 - Data is validated where it is parsed (hours strings); malformed hours are a programming error and fail loudly in tests.
 
 ## Error States
@@ -175,7 +175,7 @@ Status as of the final verification pass (see *Traceability* for evidence).
 | F6/F7 Items, €, tags | `components/MenuItemRow.tsx`, `DietaryTags.tsx`, `format.ts#formatPrice` | `format.test.ts`; screenshots |
 | F8/F9 Hours, today, closed | `components/HoursBlock.tsx` | Screenshots (open: Tuesday; closed: Monday); `aria-current="date"` checked |
 | F10 Footer | `components/SiteFooter.tsx`, `format.ts#toTelHref/toInstagramUrl/toMapsUrl` | `format.test.ts`; screenshots |
-| F11 `?state=` | `scenario.ts#parseDemoState`, `app/page.tsx` | `scenario.test.ts` (9 inputs); Playwright over 7 URLs |
+| F11 `?state=` | `next.config.ts` rewrites → `app/state/[state]/page.tsx`; `scenario.ts#isDemoState` | `scenario.test.ts` (rewrite coverage, guards); curl + Playwright over 9 URLs |
 | F12 open | `scenario.ts#getScenario` | `scenario.test.ts`; Playwright |
 | F13 closed + next opening | `components/ClosedBanner.tsx`, `format.ts#describeNextOpening` | `hours.test.ts`, `format.test.ts`; Playwright |
 | F14 sold out | `MenuItemRow.tsx`, `SpecialCallout.tsx#SoldOutSpecial` | `scenario.test.ts`; Playwright asserts "Sold out" in the row |
@@ -184,7 +184,7 @@ Status as of the final verification pass (see *Traceability* for evidence).
 | U1 Brand colour | `globals.css` `--color-amber`; special fill, buttons, active nav, accent rules, today's row, top bar | Visual review |
 | R1/R2 Responsive | Mobile-first classes; `lg` sidebar layout | Screenshots 375/768/1280, `scrollWidth − innerWidth = 0` for all 9 combos |
 | A1–A6 Accessibility | Landmarks, headings, skip link, focus rings, contrast tokens | axe-core: 0 violations ×6 (3 states × 2 widths); keyboard tab-through; measured contrast ratios |
-| S1 Entrance animation | `globals.css` `@utility enter` | Disabled under reduced motion and in print |
+| S1 Entrance animation | `globals.css` `.intro-mark`, `@utility enter`, `@utility arrive-glow` | Frame-by-frame capture via the Web Animations API; off under reduced motion and in print; the h1 (LCP) is never animated |
 | S2 Print | `@media print` + `print:` utilities | Chrome PDF: 1 A4 page in all three states |
 | S3–S5 | Not implemented | Documented in README / DECISIONS D12 |
 

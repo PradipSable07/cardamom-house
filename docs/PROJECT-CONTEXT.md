@@ -12,17 +12,18 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 
 ## Architecture (one paragraph)
 
-`app/page.tsx` (Server Component) awaits `searchParams`, turns `?state=` into a `Scenario` (simulated Lisbon time + sold-out ids), derives open status and today's special, and composes presentational components. Pure logic lives in `features/menu/*.ts` and is unit tested. `CategoryNav` is the only client component (scroll-spy). See [ARCHITECTURE.md](ARCHITECTURE.md) and [DECISIONS.md](DECISIONS.md).
+`?state=` is resolved by rewrites in `next.config.ts` to prerendered routes (`/`, `/state/[state]`). `MenuPage` turns a `DemoState` into a `Scenario` (simulated Lisbon time plus sold-out ids), derives open status and today's special, and composes presentational components. Pure logic lives in `features/menu/*.ts` and is unit tested. `CategoryNav` is the only client component (scroll-spy). See [ARCHITECTURE.md](ARCHITECTURE.md) and [DECISIONS.md](DECISIONS.md).
 
 ## Files
 
 | Path | Role |
 | --- | --- |
-| `src/app/{layout,page}.tsx`, `globals.css`, `icon.svg` | Route, fonts, tokens, print, favicon |
+| `next.config.ts` | `?state=` → `/state/[state]` rewrites |
+| `src/app/{layout,page}.tsx`, `state/[state]/page.tsx`, `globals.css`, `icon.svg` | Static routes, fonts, tokens, motion, print, favicon |
 | `src/data/menu.json` | Brief's mock data, verbatim |
 | `src/features/menu/{types,menu-data,hours,scenario,special,format,anchors}.ts` | Domain |
-| `src/features/menu/*.test.ts` | 47 unit tests |
-| `src/features/menu/components/*.tsx` | Hero, SpecialCallout, ClosedBanner, CategoryNav, MenuSection, MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher |
+| `src/features/menu/*.test.ts` | 46 unit tests |
+| `src/features/menu/components/*.tsx` | MenuPage, Hero, SpecialCallout, ClosedBanner, CategoryNav, MenuSection, MenuItemRow, DietaryTags, HoursBlock, SiteFooter, DemoStateSwitcher |
 | `src/components/ui/{Pill,icons}.tsx` | Shared primitive + decorative SVGs |
 
 ## Verification log
@@ -31,8 +32,8 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 | --- | --- |
 | `npm run lint` | pass |
 | `npm run typecheck` | pass |
-| `npm test` | 47/47 pass |
-| `npm run build` | pass — `/` dynamic, 4.51 kB page JS, 107 kB first load |
+| `npm test` | 46/46 pass |
+| `npm run build` | pass: `/` static, `/state/[state]` SSG ×2, 1.3 kB page JS, 104 kB first load |
 | `npm audit` | 0 vulnerabilities (with PostCSS override, D11) |
 | axe-core (wcag2a/aa, 21aa, 22aa, best-practice) | 0 violations — 3 states × 375/1280 px |
 | Horizontal overflow | 0 px at 320/360/375/768/1280 in all states |
@@ -42,6 +43,9 @@ Kwill Frontend Trial: a single phone-first menu page for Cardamom House (Lisbon)
 | Invalid `?state=` | bogus / empty / repeated → handled |
 | Console | No errors or warnings during load and client-side state switching |
 | Print | 1 A4 page in all three states (Chrome PDF) |
+| Lighthouse mobile (A/B, 5 interleaved runs, median) | 85 → **97**; LCP 3.6 s → 2.4 s; TBT 236 → 122 ms; CLS 0; 439 → 242 KB |
+| Motion | Intro captured frame by frame (WAAPI seek); 0 px overflow mid-flight; off under reduced motion; arrival glow fires on `:target` |
+| Caching | Every `?state=` URL: `x-nextjs-cache: HIT`, `s-maxage=31536000` |
 
 QA scripts (Playwright + axe) were run from the session scratchpad, not committed — see *Remaining work*.
 
@@ -51,6 +55,7 @@ QA scripts (Playwright + axe) were run from the session scratchpad, not committe
 - Scroll-spy briefly highlights intermediate sections during a smooth jump.
 - Print body text ≈ 6.7pt (trade-off for one page).
 - Simulated time only.
+- Lab numbers came from a loaded dev machine (iCloud sync + another project's Node processes). Confirm with PageSpeed Insights on the Vercel URL.
 
 ## Remaining work (candidate)
 

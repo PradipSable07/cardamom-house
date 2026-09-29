@@ -19,7 +19,7 @@ Three demo states, switchable by URL or from the strip at the bottom of the page
 | `/?state=closed` | Monday 11:30 — "We're closed today", back Tuesday from 08:00 |
 | `/?state=special-sold-out` | Tuesday 11:30 — open, Saffron French Toast sold out |
 
-Unknown values fall back to `open`.
+Unknown values fall back to `open`; if the param repeats, the last value wins.
 
 | Script | Does |
 | --- | --- |
@@ -36,18 +36,51 @@ Next.js 15 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 ·
 ## How it's put together
 
 ```text
-app/page.tsx              Server Component: ?state= → scenario → page
-features/menu/*.ts        pure logic: hours, open status, special, formatting (unit tested)
-features/menu/components  presentational components; CategoryNav is the only client component
-data/menu.json            the brief's mock data, verbatim
+next.config.ts               ?state=closed|special-sold-out → rewrite to /state/[state]
+app/page.tsx                 static default state (open)
+app/state/[state]/page.tsx   the other states, prerendered at build time
+features/menu/*.ts           pure logic: hours, open status, special, formatting (unit tested)
+features/menu/components     MenuPage + presentational components; CategoryNav is the only client component
+data/menu.json               the brief's mock data, verbatim
 ```
 
-- **State lives in the URL.** `?state=` is parsed once on the server into a simulated Lisbon time plus a set of sold-out items. Everything else — open/closed, next opening time, which hours row is today, how the special renders — is derived from that during render. There is no client state apart from the active nav tab.
+- **State lives in the URL, and every state is static.** `?state=` is resolved by a rewrite at the routing layer, so each state is a prerendered, CDN-cached page, and no server code runs on a request. Each page derives everything else from its scenario (a simulated Lisbon time plus the sold-out items): open/closed, the next opening time, today's hours row and whether the special is available. The only client state is the active nav tab.
 - **Open/closed is computed, not hard-coded per state.** `getOpenStatus(hours, time)` handles closed days, before opening, after closing and wrapping round the week. The closed banner's "back tomorrow, Tuesday, from 08:00" comes from the hours data.
 - **Data is checked twice.** `tsc` checks the JSON's shape against `RawMenu`. At load time, `normaliseMenu` parses the hours strings and tag codes and throws on anything it doesn't recognise, and a test runs it against the real file.
-- **Minimal JavaScript.** About 4.5 kB of page JS on top of the framework. The category links are plain `#anchors`, so jumping between sections works with JavaScript off.
+- **Minimal JavaScript.** 1.3 kB of page JS on top of the framework. The category links and demo-state links are plain anchors, so everything works with JavaScript off.
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [docs/DECISIONS.md](docs/DECISIONS.md) · [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)
+
+## Motion
+
+There are two small moments, both CSS-only, so they run before hydration and add 0 KB of JS:
+
+1. **Arrival.** On load, the cardamom mark appears large in the centre of the screen, then glides and turns into its place above the name. The tagline, status and special follow it in.
+2. **Jump feedback.** "Find it on the menu" scrolls to the dish, and its row glows amber once it arrives.
+
+The `<h1>` (the LCP element) is never animated. Everything is off under `prefers-reduced-motion` and in print.
+
+## Performance
+
+Measured with Lighthouse (mobile preset), median of 5 runs, production builds, before and after run alternately:
+
+| | Before | After |
+| --- | --- | --- |
+| Score | 85 | **97** |
+| LCP | 3.6 s | **2.4 s** |
+| FCP | 0.95 s | 0.78 s |
+| TBT | 236 ms | 122 ms |
+| CLS | 0 | 0 |
+| Weight | 439 KB | 242 KB |
+
+What changed:
+
+- All three states are prerendered (TTFB is a CDN hit).
+- Fonts went from 308 KB to 120 KB.
+- The LCP element is visible from the first frame.
+- The `next/link` chunk was dropped.
+
+Two experiments made things worse and were reverted: inlining the CSS, and dropping font preloads. [docs/DECISIONS.md](docs/DECISIONS.md) (D13–D18) has the measurements.
 
 ## Accessibility
 
@@ -55,12 +88,12 @@ Landmarks, one `h1`, headings per section and dish, a skip link, and visible foc
 
 ## Testing
 
-`npm test` runs 47 unit tests on the logic that can fail silently:
+`npm test` runs 46 unit tests on the logic that can fail silently:
 
 - hours parsing and invalid input
 - open/closed at exact opening and closing minutes
 - next-opening lookup across the closed Monday and the week wrap
-- `?state=` parsing
+- `?state=` routing: every non-default state has a rewrite
 - special resolution, including sold-out and missing items
 - € formatting
 - contact links
