@@ -5,3 +5,5 @@ Trace-*
 qa-output
 .next
 node_modules
+.env*
+.vercel
