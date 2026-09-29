@@ -27,7 +27,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
+    // Browser extensions (e.g. QuillBot's data-qb-installed) add attributes to <html>
+    // before hydration. This only silences mismatches on <html>'s own attributes;
+    // anything deeper in the tree still reports.
+    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );
