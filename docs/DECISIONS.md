@@ -135,3 +135,12 @@ The 9 s LCP in the original DevTools trace was not representative: it was record
 ## D18. Demo-state links are plain `<a>`, not `next/link`
 
 - **Why:** Every state is a static, CDN-cached page, so a full load is effectively instant. Dropping `Link` removes a client chunk and the RSC prefetches it triggered when the footer scrolled into view. Side effect: switching state replays the intro, which is what a reviewer wants to see.
+
+## D19. Notches, the Dynamic Island and camera cut-outs
+
+- **Context:** In a normal browser tab, Safari and Chrome keep content out of the cut-out. But edge-to-edge contexts (installed web apps, Android edge-to-edge, some simulators) draw the page under it, and the category bar, stuck at `top: 0`, disappeared behind the camera.
+- **Choice:** Opt in to `viewport-fit=cover` and handle the insets explicitly, all from one set of variables (`--safe-top/right/bottom/left` over `env(safe-area-inset-*)`, plus `--gutter-left/right` = `max(gutter, inset)`):
+  - The sticky nav sticks at `top: var(--safe-top)`, below the island.
+  - The amber brand strip grows by `--safe-top` to fill the status-bar area, and a fixed, same-colour copy keeps that area amber while scrolling, so text never scrolls visibly behind the camera. `theme-color` is amber to match.
+  - Page gutters never shrink below the side cut-out in landscape; the demo strip clears the home indicator; anchor offsets and the intro mark's flight path include `--safe-top`.
+- **Verification:** Desktop Chrome always reports insets of 0, so tests override the variables to simulate an iPhone 15 Pro (portrait 59/34 px, landscape 59/21 px). Result: nav top = 59 px, headings land 23 px below the bar, content starts at 59 px in landscape, demo buttons sit 34 px above the bottom edge. On devices without cut-outs every inset is 0 and the layout is unchanged.

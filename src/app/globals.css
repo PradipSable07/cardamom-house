@@ -36,10 +36,34 @@
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+/*
+ * Safe areas (notch / Dynamic Island / camera cut-outs / home indicator).
+ * With viewport-fit=cover the page draws edge to edge, so everything that
+ * touches a screen edge reads these instead of env() directly — one place to
+ * change, and tests can simulate a notched phone by overriding them.
+ */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  /* Page side padding, never less than the cut-out in landscape. */
+  --gutter: 1.25rem;
+  --gutter-left: max(var(--gutter), var(--safe-left));
+  --gutter-right: max(var(--gutter), var(--safe-right));
+}
+
+@media (width >= 40rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
 @layer base {
   html {
-    /* Keeps anchored headings clear of the sticky category bar. */
-    scroll-padding-top: 5rem;
+    /* Keeps anchored headings clear of the sticky category bar (and the notch). */
+    scroll-padding-top: calc(5rem + var(--safe-top));
     -webkit-text-size-adjust: 100%;
   }
 
@@ -105,21 +129,19 @@
  */
 
 /* 1a. The mark. Its resting position is known from the hero's layout
- * (container max-w-6xl, px-5/sm:px-8, pt-10/sm:pt-16/lg:pt-24, below the
- * 0.375rem top bar), so the start point — the viewport centre — can be
+ * (container max-w-6xl, --gutter-left, pt-10/sm:pt-16/lg:pt-24, below the
+ * 0.375rem + safe-area top bar), so the start point — the viewport centre — can be
  * computed in CSS. If the layout changes, only the start point drifts; the
  * mark always lands exactly, because the animation ends at no transform. */
 .intro-mark {
-  --pad: 1.25rem;
   --top: 2.5rem;
   --from-scale: 7;
-  --mark-x: calc(max(0px, (100vw - 72rem) / 2) + var(--pad) + 1.25rem);
-  --mark-y: calc(0.375rem + var(--top) + 1.25rem);
+  --mark-x: calc(max(0px, (100vw - 72rem) / 2) + var(--gutter-left) + 1.25rem);
+  --mark-y: calc(0.375rem + var(--safe-top) + var(--top) + 1.25rem);
 }
 
 @media (width >= 40rem) {
   .intro-mark {
-    --pad: 2rem;
     --top: 4rem;
     --from-scale: 9;
   }

@@ -24,7 +24,7 @@ export function HoursBlock({ hours, today, status }: HoursBlockProps) {
     <section
       id={HOURS_ANCHOR}
       aria-labelledby="hours-heading"
-      className="mx-auto mt-20 max-w-6xl px-5 sm:px-8 lg:mt-28 print:mt-4 print:max-w-none print:break-inside-avoid print:px-0"
+      className="mx-auto mt-20 max-w-6xl pl-(--gutter-left) pr-(--gutter-right) lg:mt-28 print:mt-4 print:max-w-none print:break-inside-avoid print:px-0"
     >
       <div className="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-10 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] md:gap-12 print:grid print:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] print:gap-8 print:p-0 print:ring-0">
         <div>

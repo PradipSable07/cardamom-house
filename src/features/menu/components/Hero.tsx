@@ -20,7 +20,7 @@ export function Hero({ name, tagline, status, aside }: HeroProps) {
         <CardamomMark className="absolute -top-16 -right-24 h-96 w-96 text-amber/6 sm:-right-10 lg:-top-20 lg:-right-16" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-5 pt-10 pb-10 sm:px-8 sm:pt-16 lg:grid lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16 lg:pt-24 lg:pb-16 print:max-w-none print:px-0 print:pt-0 print:pb-4">
+      <div className="relative mx-auto max-w-6xl pl-(--gutter-left) pr-(--gutter-right) pt-10 pb-10 sm:pt-16 lg:grid lg:grid-cols-[1fr_minmax(0,26rem)] lg:items-end lg:gap-16 lg:pt-24 lg:pb-16 print:max-w-none print:px-0 print:pt-0 print:pb-4">
         <div>
           <CardamomMark className="intro-mark relative z-10 h-10 w-10 text-amber print:hidden" />
           <h1 className="mt-6 print:mt-0 font-display text-[3.25rem] leading-[0.95] font-semibold tracking-tight text-balance sm:text-7xl lg:text-[5.5rem] print:text-5xl">

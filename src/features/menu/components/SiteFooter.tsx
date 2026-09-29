@@ -18,7 +18,7 @@ export function SiteFooter({ restaurant, demoState, simulatedNow }: SiteFooterPr
 
   return (
     <footer className="mt-20 bg-espresso text-cream lg:mt-28 print:mt-6 print:bg-transparent print:text-ink">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-3 md:py-16 print:max-w-none print:grid-cols-2 print:px-0 print:py-2">
+      <div className="mx-auto grid max-w-6xl gap-10 pl-(--gutter-left) pr-(--gutter-right) py-14 md:grid-cols-3 md:py-16 print:max-w-none print:grid-cols-2 print:px-0 print:py-2">
         <div className="print:hidden">
           <CardamomMark className="h-8 w-8 text-amber-glow" />
           <p className="mt-4 font-display text-2xl font-semibold print:mt-0">{restaurant.name}</p>

@@ -88,7 +88,7 @@ Two experiments made things worse and were reverted: inlining the CSS, and dropp
 
 ## Accessibility
 
-Landmarks, one `h1`, headings per section and dish, a skip link, and visible focus rings everywhere, including on amber and dark surfaces. `aria-current` marks the active category, the demo state and today's row in the hours. Every colour pair was measured: body text is at least 4.5:1, including dimmed sold-out text. Open, closed, sold out and today are always spelled out in words, never shown by colour alone. Smooth scrolling and the entrance animation respect `prefers-reduced-motion`. An axe scan of all three states at 375 px and 1280 px reports 0 violations.
+Landmarks, one `h1`, headings per section and dish, a skip link, and visible focus rings everywhere, including on amber and dark surfaces. `aria-current` marks the active category, the demo state and today's row in the hours. Every colour pair was measured: body text is at least 4.5:1, including dimmed sold-out text. Open, closed, sold out and today are always spelled out in words, never shown by colour alone. Smooth scrolling and the entrance animation respect `prefers-reduced-motion`. On notched phones (Dynamic Island, camera cut-outs) the sticky bar stops below the camera and the side margins clear the notch in landscape; see D19. An axe scan of all three states at 375 px and 1280 px reports 0 violations.
 
 ## Testing
 

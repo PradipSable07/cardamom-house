@@ -14,7 +14,7 @@ export function DemoStateSwitcher({ current, simulatedNow }: DemoStateSwitcherPr
     <div className="border-t border-cream/15 print:hidden">
       <nav
         aria-label="Demo states"
-        className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-8"
+        className="mx-auto flex max-w-6xl flex-col gap-3 pl-(--gutter-left) pr-(--gutter-right) pt-5 pb-[max(1.25rem,var(--safe-bottom))] text-sm sm:flex-row sm:items-center sm:justify-between"
       >
         <p className="text-cream-mute">
           Demo &middot; simulated time {formatWeekday(simulatedNow.day)} {formatTime(simulatedNow.minutes)},

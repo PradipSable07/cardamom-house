@@ -21,7 +21,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fbf6ee",
+  // Draw edge to edge on notched phones; safe areas are handled in globals.css.
+  viewportFit: "cover",
+  // Matches the amber strip that fills the status-bar area.
+  themeColor: "#b45309",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

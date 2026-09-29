@@ -57,14 +57,14 @@ export function CategoryNav({ categories }: { categories: CategoryNavLink[] }) {
   return (
     <nav
       aria-label="Menu categories"
-      className="sticky top-0 z-30 -mx-5 border-b border-line bg-cream/95 backdrop-blur-md sm:-mx-8 lg:top-10 lg:mx-0 lg:self-start lg:border-0 lg:bg-transparent lg:backdrop-blur-none print:hidden"
+      className="sticky top-(--safe-top) z-30 mr-[calc(var(--gutter-right)*-1)] ml-[calc(var(--gutter-left)*-1)] border-b border-line bg-cream/95 backdrop-blur-md lg:top-10 lg:mx-0 lg:self-start lg:border-0 lg:bg-transparent lg:backdrop-blur-none print:hidden"
     >
       <p className="mb-3 hidden text-xs font-semibold tracking-[0.18em] text-ink-mute uppercase lg:block">
         On the menu
       </p>
       <ul
         ref={listRef}
-        className="no-scrollbar relative flex gap-1 overflow-x-auto px-3 py-1 sm:px-6 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:p-0"
+        className="no-scrollbar relative flex gap-1 overflow-x-auto py-1 pr-[calc(var(--gutter-right)-0.5rem)] pl-[calc(var(--gutter-left)-0.5rem)] lg:flex-col lg:gap-0.5 lg:overflow-visible lg:p-0"
       >
         {categories.map(({ id, name, itemCount }) => {
           const isActive = id === activeId;
